@@ -5,3 +5,4 @@ const asynHandler = (requestHandler) =>{
 }
 
 export default asynHandler;
+
