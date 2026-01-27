@@ -1,11 +1,15 @@
 import mongoose from 'mongoose';
 
+import { jwt } from 'jsonwebtoken';
+
 const userSchema = new mongoose.Schema(
     {
         username : {
             type : String,
             required : true,
-            unique : true
+            unique : true,
+            lowercase : true,
+            index : true,
         },
 
         email : {
@@ -16,12 +20,13 @@ const userSchema = new mongoose.Schema(
 
         password : {
             type : String,
-            required : true
+            required : [true, 'Password is required']
         },
 
         fullName : {
             type : String,
-            required : true
+            required : true,
+
         },
 
         profilePicture : {
@@ -52,7 +57,55 @@ const userSchema = new mongoose.Schema(
             default : []
         },
 
+        refreshToken : {
+            type : String,
+        },
+
+
     }, {timestamps : true}
 );
+
+userSchema.methods.pre('save', async function(next){
+    if(!this.isModified('password')) return next();
+    const hashingPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashingPassword;
+    return next();
+});
+
+userSchema.methods.isPasswordCorrect = async() => {
+    const checkPassword = await bcrypt.compare(this.password, password);
+    return checkPassword;
+};
+
+userSchema.methods.accessToken = () =>{
+    jwt.sign(
+        { 
+            _id : this._id,
+            email : this.email,
+            username : this.username,
+            fullName : this.fullName,
+
+        },
+
+        process.env.ACCESS_TOKEN_SECRET,
+
+        { expiresIn : process.env.ACCESS_TOKEN_EXPIRY },
+    )
+};
+
+userSchema.methods.refreshToken = () => {
+    jwt.sign(
+        {
+            _id : this._id,
+            email : this.email,
+            username : this.username,
+            fullName : this.fullName,
+        },
+
+        process.env.Refresh_TOKEN_SECRET,
+
+        { expiresIn : process.env.Refresh_TOKEN_EXPIRY, }
+    )
+};
 
 export const user = mongoose.model('User', userSchema);
