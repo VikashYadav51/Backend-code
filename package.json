@@ -1,0 +1,27 @@
+{
+  "name": "02backend",
+  "version": "1.0.0",
+  "description": "Authentication, design Schema, Mongoose Aggregration piplines, JWT, Hashing, handles Error, design customise APIERROR, ApiResponse, AsyncHandler, middleware, database connection, App, Cloudinary, Hooks, controlles, routing, ",
+  "keywords": [
+    "Node.js",
+    "Express.js",
+    "MongoDb",
+    "NPM",
+    "Package"
+  ],
+  "homepage": "https://github.com/VikashYadav51/Backend-code#readme",
+  "bugs": {
+    "url": "https://github.com/VikashYadav51/Backend-code/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VikashYadav51/Backend-code.git"
+  },
+  "license": "ISC",
+  "author": "VIKASH YADAV",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "index.js"
+  }
+}
