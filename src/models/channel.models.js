@@ -22,7 +22,13 @@ const channelSchema = new mongoose.Schema(
             type : [mongoose.Schema.Types.ObjectId],
             ref : 'User',
             default : []
-        }
+        },
+
+        owner : {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'User',
+            required : true
+        },
         
     }, {timestamps : true}
 );

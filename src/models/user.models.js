@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
+import bcrypt from 'bcrypt';
+
 import { jwt } from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema(
     {
-        username : {
+        userName : {
             type : String,
             required : true,
             unique : true,
@@ -26,12 +28,12 @@ const userSchema = new mongoose.Schema(
         fullName : {
             type : String,
             required : true,
-
         },
 
         profilePicture : {
             type : String,
-            default : ''
+            default : '',
+            required : true,
         },
 
         coverPicture : {
@@ -44,6 +46,7 @@ const userSchema = new mongoose.Schema(
             ref : 'User',
             default : [],
         },
+
         following : {
             type : [mongoose.Schema.Types.ObjectId],
             ref : 'User',
@@ -82,7 +85,7 @@ userSchema.methods.accessToken = () =>{
         { 
             _id : this._id,
             email : this.email,
-            username : this.username,
+            userName : this.userName,
             fullName : this.fullName,
 
         },
@@ -98,7 +101,7 @@ userSchema.methods.refreshToken = () => {
         {
             _id : this._id,
             email : this.email,
-            username : this.username,
+            userName : this.userName,
             fullName : this.fullName,
         },
 
