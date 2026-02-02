@@ -197,7 +197,7 @@ const updateProfilePicture = asyncHandler( async(req, res) =>{
 
     const profilePicture = await uploadOnCloudinary(profilePictureLocalPath);
     if(!profilePicture){
-        throw new ApiError(400, "Profile picture upload failed", { profilePictureLocalPath });
+        throw new ApiError(400, "Profile picture upload failed on cloudinary", { profilePictureLocalPath });
     }
 
     const user = await User.findById(req.user?._id);
