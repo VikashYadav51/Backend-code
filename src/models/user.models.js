@@ -62,47 +62,46 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre('save', async function(next){
     if(!this.isModified('password')){
-        return next();
+        return ;
     }
     const hashingPassword = await bcrypt.hash(this.password, 10);
     this.password = hashingPassword;
-    next();
+    return ;
 });
 
-userSchema.methods.isPasswordCorrect = async() => {
-    const checkPassword = await bcrypt.compare(this.password, password);
-    return checkPassword;
+userSchema.methods.isPasswordCorrect = async function(password) {
+    const hashedPassword = await bcrypt.compare(password, this.password);
+    return hashedPassword;
 };
 
-userSchema.methods.accessToken = () =>{
-    jwt.sign(
+userSchema.methods.accessToken = function () {
+    return jwt.sign(
         { 
-            _id : this._id,
-            email : this.email,
-            userName : this.userName,
-            fullName : this.fullName,
-
+            _id: this._id,
+            email: this.email,
+            userName: this.userName,
+            fullName: this.fullName,
         },
 
         process.env.ACCESS_TOKEN_SECRET,
 
-        { expiresIn : process.env.ACCESS_TOKEN_EXPIRY },
-    )
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+    );
 };
 
-userSchema.methods.refreshTokens = () => {
-    jwt.sign(
+userSchema.methods.refreshTokens = function () {
+    return jwt.sign(
         {
-            _id : this._id,
-            email : this.email,
-            userName : this.userName,
-            fullName : this.fullName,
+            _id: this._id,
+            email: this.email,
+            userName: this.userName,
+            fullName: this.fullName,
         },
 
-        process.env.Refresh_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET_KEY,
 
-        { expiresIn : process.env.Refresh_TOKEN_EXPIRY, }
-    )
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
 };
 
 export const User = mongoose.model('User', userSchema);
