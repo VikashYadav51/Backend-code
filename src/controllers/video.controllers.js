@@ -1,10 +1,16 @@
-import { Video } from "../models/video.models.js";
+import { Video } from '../models/video.models.js';
 
-import ApiResponse from "../utils/ApiResponse.js";
+import ApiResponse from '../utils/ApiResponse.js';
 
-import ApiError from "../utils/ApiError.js";
+import ApiError from '../utils/ApiError.js';
 
-import asyncHandler from "../utils/asyncHandler.js";
+import asyncHandler from '../utils/asyncHandler.js';    
+
+import  uploadOnCloudinary  from '../utils/cloudinary.js';
+
+const uploadVideo = asyncHandler( async(req, res) =>{
+    
+})
 
 
 const changeTitle = asyncHandler( async(req, res) =>{
@@ -111,6 +117,7 @@ const updateDislikes = asyncHandler( async(req, res) =>{
 
 
 export {
+    uploadVideo,
     changeTitle,
     changeDescription,
     changeTags,
