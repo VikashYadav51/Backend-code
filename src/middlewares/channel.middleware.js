@@ -1,6 +1,6 @@
 import ApiError from '../utils/ApiError.js';
 
-import { Channel } from '../models/channel.model.js';
+import { Channel } from '../models/channel.models.js';
 
 import asyncHandler from '../utils/asyncHandler.js';
 

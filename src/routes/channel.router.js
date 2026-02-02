@@ -8,7 +8,7 @@ import {
   findSubscribers,
 } from '../controllers/channel.controllers.js';
 
-const channelRouter = express.Router();   
+const channelRouter = express.Router();    
 
 channelRouter.patch('/name', verifyJWT, verifyChannelOwner, changeChannelName);
 channelRouter.patch('/description', verifyJWT, verifyChannelOwner, changeDescription);
