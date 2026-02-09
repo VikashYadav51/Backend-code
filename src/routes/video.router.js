@@ -9,23 +9,24 @@ import {
   changeTags,
   updateLikes,
   updateViews,
-  uplaoadVideo,
+  uploadVideo,
   updateDislikes,
+  upadateComment,     
 
 } from '../controllers/video.controllers.js';
 
 
 const videoRouter = express.Router();
 
-videoRouter.post('/uplaoadVideo', verifyJWT, upload.fields([{ name: 'uploadVideo', maxCount: 1 }]), uplaoadVideo);
+videoRouter.post('/uploadVideo', upload.fields([{ name: 'uploadVideo', maxCount: 1 }]), verifyJWT, uploadVideo);
 
-videoRouter.patch('/title', verifyJWT, changeTitle);
+videoRouter.patch('/title', changeTitle);
 
 videoRouter.patch('/description', verifyJWT, changeDescription);
 
-videoRouter.patch('/tags', verifyJWT, changeTags);
+videoRouter.patch('/tags', changeTags);
 
-videoRouter.patch('/likes', verifyJWT, updateLikes);
+videoRouter.patch('/likes', updateLikes);
 
 videoRouter.patch('/views', verifyJWT, updateViews);
 
