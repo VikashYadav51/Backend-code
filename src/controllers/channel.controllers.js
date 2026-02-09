@@ -23,6 +23,9 @@ const createChannel = asyncHandler( async(req, res) =>{
     const channel = await Channel.create({
         name,
         description,
+        owner : req.user?._id,
+        videos : [],
+        subscribers : [],
     });
 
     return res.status(201)
@@ -35,14 +38,16 @@ const createChannel = asyncHandler( async(req, res) =>{
 const changeChannelName = asyncHandler( async(req, res) =>{
     const { oldChannelName, newChannelName } = req.body;
 
-    if(!oldChannelName || newChannelName.trim() === ""){
-        throw new ApiError(400, "Channel name is required", { newChannelName });
-    }
+    if (!newChannelName || newChannelName.trim() === "") {
+    throw new ApiError(400, "New channel name is required");
+}
 
-    const channel = await Channel.findById(req.channel?._id);
+    const channel = await Channel.findById(req.channelOwner?._id);
+
+    console.log(channel);
     
     if(!channel){
-        throw new ApiError(404, "Channel not found", { channelId : req.channel?._id });
+        throw new ApiError(404, "Channel not found", { channelId : req.channelOwner?._id });
     }
     
     channel.name = newChannelName;
