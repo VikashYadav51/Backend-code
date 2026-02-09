@@ -1,4 +1,5 @@
 import { Video } from '../models/video.models.js';
+import { Channel } from '../models/channel.models.js';
 
 import ApiResponse from '../utils/ApiResponse.js';
 
@@ -10,27 +11,52 @@ import  uploadOnCloudinary  from '../utils/cloudinary.js';
 
 
 
-const uplaoadVideo = asyncHandler( async (req, res) =>{
-    const videoLocalPath = req.files?. video?.[0]?.path;
+const uploadVideo = asyncHandler( async (req, res) =>{
+    const videoLocalPath = req.files?.uploadVideo?.[0]?.path;
+    console.log(videoLocalPath);
+
     if(!videoLocalPath){
         throw new ApiError(400, "Video is required", { videoLocalPath });
     }
 
     const video = await uploadOnCloudinary(videoLocalPath);
+    console.log(video);
 
     if(!video){
         throw new ApiError(400, "Video upload failed", { videoLocalPath });
     }
 
-    video.videoUrl = video.url;
+    // const channel = await Channel.findOne({ owner: req.user?._id });
+    // if(!channel){
+    //     throw new ApiError(404, "Channel not found for user", { userId: req.user?._id });
+    // }
+
+    const videoUser = await Video.create({
+        uploadVideo : video.secure_url || "WWW.google.com",
+        description : video.signature?.toString() || "First description",
+        tags : video.tags || [],
+        likes: video.likes || 0,
+        views: video.views || 0,
+        dislikes: video.dislikes || 0,
+        comments: video.comments || 0,
+        title: video.original_filename?.toString() || "First title...",
+        videoUrl: video.secure_url || "WWW.google.com",
+        channel :req.user?._id,
+        thumbnailUrl: video.playback_url?.toString() || "WWW.google.com",
+        duration: video.duration || 0,
+    });
+
+    if(!videoUser){
+        throw new ApiError(400, "Video creation failed", { videoLocalPath });
+    }
 
     return res.status(200).json(
-        new ApiResponse(200, "Video uploaded successfully", video)
+        new ApiResponse(200, "Video uploaded successfully", videoUser)
     )
 })
 
 const changeTitle = asyncHandler( async(req, res) =>{
-    const { videoUrl, title } = req.body;
+    const { title, videoUrl } = req.body;
 
     const video = await Video.findOne({ videoUrl });
 
@@ -47,14 +73,15 @@ const changeTitle = asyncHandler( async(req, res) =>{
 })
 
 const changeDescription = asyncHandler( async(req, res) =>{
-    const { videoUrl, description } = req.body;
+    const { description, videoUrl } = req.body;
 
     const video = await Video.findOne({ videoUrl });
-
+    
     if(!video){
         throw new ApiError(404, "Video not found", { videoUrl });
     }
 
+    
     video.description = description;
     await video.save({validateBeforeSave : true});
     
@@ -150,7 +177,7 @@ const upadateComment = asyncHandler( async(req, res) =>{
 
 
 export {
-    uplaoadVideo,
+    uploadVideo,
     changeTitle,
     changeDescription,
     changeTags,
