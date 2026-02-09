@@ -6,6 +6,32 @@ import ApiError  from '../utils/ApiError.js';
 
 import { Channel } from '../models/channel.models.js';
 
+
+const createChannel = asyncHandler( async(req, res) =>{
+    const { name, description } = req.body;
+
+    const checkChannel = await Channel.findOne({
+        $or : [
+            { name }, { description}
+        ]
+    })
+
+    if(checkChannel){
+        throw new ApiError(400, "Channel name or description already exists", { name, description });
+    }
+
+    const channel = await Channel.create({
+        name,
+        description,
+    });
+
+    return res.status(201)
+    .json(
+        new ApiResponse(201, "Channel created successfully", channel),
+    )
+
+})
+
 const changeChannelName = asyncHandler( async(req, res) =>{
     const { oldChannelName, newChannelName } = req.body;
 
@@ -49,20 +75,8 @@ const changeDescription = asyncHandler( async(req, res) =>{
 });
 
 
-const findSubscribers = asyncHandler( async(req, res) =>{
-    const channel = await Channel.findById(req.channel?._id);
-
-    if(!channel){
-        throw new ApiError(404, "Channel not found", { channelId : req.channel?._id });
-    }
-
-    return res.status(200).json(new ApiResponse(200, "Subscribers found successfully", channel.subscribers));
-});
-
-
 export {
+    createChannel,
     changeChannelName,
     changeDescription,
-    findSubscribers,
-
 }
