@@ -35,7 +35,7 @@ userRouter.patch('/password', verifyJWT, updatePassword);
 
 userRouter.patch('/profile-picture', verifyJWT, upload.single('profilePicture'), updateProfilePicture);
 
-userRouter.patch('/cover-picture', verifyJWT, upload.single('coverImage'), updateCoverPicture);
+userRouter.patch('/cover-picture', verifyJWT, upload.single('coverPicture'), updateCoverPicture);
 
 userRouter.patch('/avatar', verifyJWT, upload.single('avatar'), upadateAvatar);
 
