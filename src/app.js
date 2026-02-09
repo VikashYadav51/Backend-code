@@ -1,13 +1,9 @@
 import express from 'express';
-
 import cookieParser from 'cookie-parser';
-
 import cors from 'cors';
 
 import userRouter from './routes/user.routes.js';
-
 import videoRouter from './routes/video.router.js'
-
 import channelRouter from './routes/channel.router.js'
 
 const app = express();
@@ -28,7 +24,6 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 
 // Routing.......
-
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/video', videoRouter);
 app.use('/api/v1/channel', channelRouter);
